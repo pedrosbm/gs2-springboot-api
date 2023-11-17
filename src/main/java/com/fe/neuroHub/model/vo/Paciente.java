@@ -1,100 +1,68 @@
 package com.fe.neuroHub.model.vo;
 
+import java.sql.Date;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+/**
+ * Classe modelo do paciente do banco de dados
+ * @author pedro
+ */
 public class Paciente {
+	
+	@JsonProperty("id")
 	private int id;
-	private String name;
-	private String password;
+	
+	@JsonProperty("nmPaciente")
+	private String nmPaciente;
+
+	@JsonProperty("dtNasc")
+	private Date dtNasc;
+
+	@JsonProperty("email")
 	private String email;
-	private String phone;
-	private String document;
-	private String address;
-	private String city;
-	private String state;
-	private String zipCode;
-	private String birthday;
-
-	public Paciente(int id, String name, String password, String email, String phone, String document, String address, String city, String state, String zipCode, String birthday) {
-		this.id = id;
-		this.name = name;
-		this.password = password;
-		this.email = email;
-		this.phone = phone;
-		this.document = document;
-		this.address = address;
-		this.city = city;
-		this.state = state;
-		this.zipCode = zipCode;
-		this.birthday = birthday;
-	}
-
-	public Paciente() {
-		
+	
+	public Paciente(){
+	
 	}
 	
+	public Paciente(int id, String nmPaciente, Date dtNasc, String email) {
+		this.id = id;
+		this.nmPaciente = nmPaciente;
+		this.dtNasc = dtNasc;
+		this.email = email;
+	}
+
+	@JsonCreator
+	public Paciente(@JsonProperty("nmPaciente")String nmPaciente,@JsonProperty("dtNasc") Date dtNasc,@JsonProperty("email") String email) {
+		this.nmPaciente = nmPaciente;
+		this.dtNasc = dtNasc;
+		this.email = email;
+	}
+
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getName() {
-		return name;
+	public String getNmPaciente() {
+		return nmPaciente;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setNmPaciente(String nmPaciente) {
+		this.nmPaciente = nmPaciente;
+	}
+	public Date getDtNasc() {
+		return dtNasc;
+	}
+	public void setDtNasc(Date dtNasc) {
+		this.dtNasc = dtNasc;
 	}
 	public String getEmail() {
 		return email;
 	}
 	public void setEmail(String email) {
 		this.email = email;
-	}
-	public String getPhone() {
-		return phone;
-	}
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-	public String getDocument() {
-		return document;
-	}
-	public void setDocument(String document) {
-		this.document = document;
-	}
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
-	public String getCity() {
-		return city;
-	}
-	public void setCity(String city) {
-		this.city = city;
-	}
-	public String getState() {
-		return state;
-	}
-	public void setState(String state) {
-		this.state = state;
-	}
-	public String getZipCode() {
-		return zipCode;
-	}
-	public void setZipCode(String zipCode) {
-		this.zipCode = zipCode;
-	}
-	public String getBirthday() {
-		return birthday;
-	}
-	public void setBirthday(String birthday) {
-		this.birthday = birthday;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
 	}
 }

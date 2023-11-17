@@ -5,6 +5,10 @@ import java.sql.SQLException;
 
 import oracle.jdbc.datasource.impl.OracleDataSource;
 
+/**
+ * Classe responsável pelo singleton da conexão do banco de dados oracle
+ * @author pedro
+ */
 public class DatabaseConnection {
 	private static final String url = "jdbc:oracle:thin:@oracle.fiap.com.br:1521:ORCL";
 	public static Connection conn;
