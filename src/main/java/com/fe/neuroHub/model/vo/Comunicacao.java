@@ -24,6 +24,9 @@ public class Comunicacao {
 	
 	@JsonProperty("idMedico")
 	private int idMedico;
+	
+	@JsonProperty("remetente")
+	private String remetente;
 
 	public Comunicacao(int id, Date dtEnvio, String mensagem, int idPaciente, int idMedico) {
 		this.id = id;
@@ -38,11 +41,12 @@ public class Comunicacao {
 	}
 
 	@JsonCreator	
-	public Comunicacao(@JsonProperty("dtEnvio")Date dtEnvio,@JsonProperty("mensagem") String mensagem,@JsonProperty("idPaciente") int idPaciente,@JsonProperty("idMedico") int idMedico) {
+	public Comunicacao(@JsonProperty("dtEnvio")Date dtEnvio,@JsonProperty("mensagem") String mensagem,@JsonProperty("idPaciente") int idPaciente,@JsonProperty("idMedico") int idMedico,  @JsonProperty("remetente")String remetente) {
 		this.dtEnvio = dtEnvio;
 		this.mensagem = mensagem;
 		this.idPaciente = idPaciente;
 		this.idMedico = idMedico;
+		this.remetente = remetente;
 	}
 
 	public int getId() {
@@ -74,5 +78,13 @@ public class Comunicacao {
 	}
 	public void setIdMedico(int idMedico) {
 		this.idMedico = idMedico;
+	}
+
+	public String getRemetente() {
+		return remetente;
+	}
+
+	public void setRemetente(String remetente) {
+		this.remetente = remetente;
 	}
 }

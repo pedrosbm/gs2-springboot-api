@@ -23,6 +23,9 @@ public class Paciente {
 	@JsonProperty("email")
 	private String email;
 	
+	@JsonProperty("senha")
+	private String senha;
+	
 	public Paciente(){
 	
 	}
@@ -35,10 +38,11 @@ public class Paciente {
 	}
 
 	@JsonCreator
-	public Paciente(@JsonProperty("nmPaciente")String nmPaciente,@JsonProperty("dtNasc") Date dtNasc,@JsonProperty("email") String email) {
+	public Paciente(@JsonProperty("nmPaciente")String nmPaciente,@JsonProperty("dtNasc") Date dtNasc,@JsonProperty("email") String email, @JsonProperty("senha")String senha) {
 		this.nmPaciente = nmPaciente;
 		this.dtNasc = dtNasc;
 		this.email = email;
+		this.senha = senha;
 	}
 
 	public int getId() {
@@ -64,5 +68,11 @@ public class Paciente {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public String getSenha() {
+		return senha;
+	}
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 }
