@@ -50,19 +50,16 @@ public class ExameDao {
         return "Delete concluído";
     }
 
-    public Exame selectLast() {
+    public int selectLast() {
         String sqlStatement = "SELECT * FROM (SELECT * FROM exame ORDER BY id DESC) WHERE ROWNUM <= 1";
-        Exame exame = new Exame();
-
+        int id = 0;
+        
         try {
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                exame.setId(resultSet.getInt("ID"));
-                exame.setTipoExame(resultSet.getString("TIPOEXAME"));
-                exame.setResultado(resultSet.getString("RESULTADO"));
-                exame.setIdPaciente(resultSet.getInt("IDPACIENTE"));
+                id = resultSet.getInt("ID");
             }
 
         } catch (SQLException e) {
@@ -71,7 +68,7 @@ public class ExameDao {
             e.printStackTrace();
         }
 
-        return exame;
+        return id;
     }
     
     public Exame selectById(int id) {

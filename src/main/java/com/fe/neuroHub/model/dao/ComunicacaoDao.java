@@ -109,5 +109,26 @@ public class ComunicacaoDao {
 
         return comunicacao;
     }
+    
+    public int selectLast() {
+        String sqlStatement = "SELECT * FROM (SELECT * FROM comunicacao ORDER BY id DESC) WHERE ROWNUM <= 1";
+        int id = 0;
+        
+        try {
+            PreparedStatement statement = conn.prepareStatement(sqlStatement);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                id = resultSet.getInt("ID");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Algo deu errado ao selecionar a comunicação por ID");
+            DatabaseConnection.closeConnection();
+            e.printStackTrace();
+        }
+
+        return id;
+    }
 
 }

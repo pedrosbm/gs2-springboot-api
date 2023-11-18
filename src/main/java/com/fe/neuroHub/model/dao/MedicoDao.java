@@ -121,19 +121,16 @@ public class MedicoDao {
         return medico;
     }
     
-    public Medico selectLast() {
+    public int selectLast() {
         String sqlStatement = "SELECT * FROM (SELECT * FROM medico ORDER BY id DESC) WHERE ROWNUM <= 1";
-        Medico medico = new Medico();
-
+        int id = 0;
+        
         try {
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                medico.setId(resultSet.getInt("ID"));
-                medico.setNmMedico(resultSet.getString("NM_MEDICO"));
-                medico.setEspecialidade(resultSet.getString("ESPECIALIDADE"));
-                medico.setEmail(resultSet.getString("EMAIL"));
+                id = resultSet.getInt("ID");
             }
 
         } catch (SQLException e) {
@@ -141,6 +138,6 @@ public class MedicoDao {
             DatabaseConnection.closeConnection();
             e.printStackTrace();
         }
-        return medico;
+        return id;
     }
 }
