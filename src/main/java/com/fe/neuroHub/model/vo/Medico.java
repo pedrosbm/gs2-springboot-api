@@ -11,7 +11,7 @@ public class Medico {
 	@JsonProperty("id")
 	private int id;
 	
-	@JsonProperty("nmMedico")
+	@JsonProperty("nome")
 	private String nmMedico;
 	
 	@JsonProperty("especialidade")
@@ -20,15 +20,19 @@ public class Medico {
 	@JsonProperty("email")
 	private String email;
 	
+	@JsonProperty("senha")
+	private String senha;
+	
 	public Medico() {
 		
 	}
 	
 	@JsonCreator
-	public Medico(@JsonProperty("nmMedico")String nmMedico,@JsonProperty("especialidade")String especialidade,@JsonProperty("email") String email) {
+	public Medico(@JsonProperty("nome")String nmMedico,@JsonProperty("especialidade")String especialidade,@JsonProperty("email") String email, @JsonProperty("Senha") String senha) {
 		this.nmMedico = nmMedico;
 		this.especialidade = especialidade;
 		this.email = email;
+		this.senha = senha;
 	}
 
 	public Medico(int id, String nmMedico, String especialidade, String email) {
@@ -61,5 +65,13 @@ public class Medico {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 }

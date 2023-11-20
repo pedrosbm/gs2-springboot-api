@@ -14,7 +14,7 @@ public class Paciente {
 	@JsonProperty("id")
 	private int id;
 	
-	@JsonProperty("nmPaciente")
+	@JsonProperty("nome")
 	private String nmPaciente;
 
 	@JsonProperty("dtNasc")
@@ -38,7 +38,7 @@ public class Paciente {
 	}
 
 	@JsonCreator
-	public Paciente(@JsonProperty("nmPaciente")String nmPaciente,@JsonProperty("dtNasc") Date dtNasc,@JsonProperty("email") String email, @JsonProperty("senha")String senha) {
+	public Paciente(@JsonProperty("nome")String nmPaciente,@JsonProperty("dtNasc") Date dtNasc,@JsonProperty("email") String email, @JsonProperty("senha")String senha) {
 		this.nmPaciente = nmPaciente;
 		this.dtNasc = dtNasc;
 		this.email = email;

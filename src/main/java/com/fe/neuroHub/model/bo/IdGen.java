@@ -1,7 +1,6 @@
 package com.fe.neuroHub.model.bo;
 
 import com.fe.neuroHub.model.dao.ComunicacaoDao;
-import com.fe.neuroHub.model.dao.ConsultaDao;
 import com.fe.neuroHub.model.dao.ExameDao;
 import com.fe.neuroHub.model.dao.MedicoDao;
 import com.fe.neuroHub.model.dao.PacienteDao;
@@ -15,7 +14,6 @@ public class IdGen {
 	private PacienteDao pDao = new PacienteDao();
 	private MedicoDao mDao = new MedicoDao();
 	private ExameDao eDao = new ExameDao();
-	private ConsultaDao conDao = new ConsultaDao();
 	private ComunicacaoDao comDao = new ComunicacaoDao();
 	
 	
@@ -33,12 +31,6 @@ public class IdGen {
 	
 	public int exameNewId() {
 		int id = eDao.selectLast();
-		
-		return id + 1;
-	}
-	
-	public int consultaNewId() {
-		int id = conDao.selectLast();
 		
 		return id + 1;
 	}
