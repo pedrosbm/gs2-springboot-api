@@ -4,6 +4,7 @@ import java.sql.Date;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fe.neuroHub.model.bo.DateConv;
 
 /**
  * Classe modelo do paciente do banco de dados
@@ -38,9 +39,9 @@ public class Paciente {
 	}
 
 	@JsonCreator
-	public Paciente(@JsonProperty("nome")String nmPaciente,@JsonProperty("dtNasc") Date dtNasc,@JsonProperty("email") String email, @JsonProperty("senha")String senha) {
+	public Paciente(@JsonProperty("nome")String nmPaciente,@JsonProperty("dtNasc") String dtNasc,@JsonProperty("email") String email, @JsonProperty("senha")String senha) {
 		this.nmPaciente = nmPaciente;
-		this.dtNasc = dtNasc;
+		this.dtNasc = DateConv.StringToDate(dtNasc);
 		this.email = email;
 		this.senha = senha;
 	}

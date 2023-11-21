@@ -7,6 +7,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.fe.neuroHub.model.vo.Paciente;
 
 import java.sql.Connection;
@@ -20,13 +25,19 @@ import java.util.ArrayList;
  * Classe de acesso e modificação do Paciente no banco de dados
  * @author pedro
  */
+@Component
 public class PacienteDao {
-    private Connection conn = DatabaseConnection.getConnection();
+    private DataSource dataSource;
+    
+    @Autowired
+    public PacienteDao(DataSource dataSource) {
+    	this.dataSource = dataSource;
+    }
     
     public String insert(Paciente paciente) {
-        String sqlStatement = "INSERT INTO paciente (ID, NM_PACIENTE, DT_NASC, EMAIL, SENHA) VALUES (?, ?, ?, ?, ?)";
+        String sqlStatement = "INSERT INTO paciente VALUES (?, ?, ?, ?, ?)";
 
-        try {
+        try (Connection conn = dataSource.getConnection()){
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             statement.setInt(1, paciente.getId());
             statement.setString(2, paciente.getNmPaciente());
@@ -37,7 +48,6 @@ public class PacienteDao {
             statement.execute();
         } catch (SQLException e) {
             System.err.println("Algo deu errado");
-            DatabaseConnection.closeConnection();
             e.printStackTrace();
             return "Erro na inserção";
         }
@@ -46,9 +56,9 @@ public class PacienteDao {
     }
 
     public String update(Paciente paciente) {
-        String sqlStatement = "UPDATE paciente SET NM_PACIENTE = ?, DT_NASC = ?, EMAIL = ?, SENHA = ? WHERE ID = ?";
+        String sqlStatement = "UPDATE paciente SET Nome = ?, Data_Nascimento = ?, Email = ?, Senha = ? WHERE ID_Paciente = ?";
 
-        try {
+        try (Connection conn = dataSource.getConnection()){
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             statement.setString(1, paciente.getNmPaciente());
             statement.setDate(2, paciente.getDtNasc());
@@ -59,7 +69,6 @@ public class PacienteDao {
             statement.execute();
         } catch (SQLException e) {
             System.err.println("Algo deu errado");
-            DatabaseConnection.closeConnection();
             e.printStackTrace();
             return "Erro na atualização";
         }
@@ -68,15 +77,14 @@ public class PacienteDao {
     }
     
     public String delete(int id) {
-        String sqlStatement = "DELETE FROM paciente WHERE ID = ?";
+        String sqlStatement = "DELETE FROM paciente WHERE ID_Paciente = ?";
 
-        try {
+        try (Connection conn = dataSource.getConnection()){
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             statement.setInt(1, id);
             statement.execute();
         } catch (SQLException e) {
             System.err.println("Algo deu errado");
-            DatabaseConnection.closeConnection();
             e.printStackTrace();
             return "Erro na exclusão";
         }
@@ -89,15 +97,15 @@ public class PacienteDao {
 
         String sqlStatement = "SELECT * FROM paciente";
 
-        try {
+        try (Connection conn = dataSource.getConnection()){
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
                 Paciente paciente = new Paciente();
-                paciente.setId(resultSet.getInt("ID"));
-                paciente.setNmPaciente(resultSet.getString("NM_PACIENTE"));
-                paciente.setDtNasc(resultSet.getDate("DT_NASC"));
+                paciente.setId(resultSet.getInt("ID_Paciente"));
+                paciente.setNmPaciente(resultSet.getString("Nome"));
+                paciente.setDtNasc(resultSet.getDate("Data_Nascimento"));
                 paciente.setEmail(resultSet.getString("EMAIL"));
                 paciente.setSenha(resultSet.getString("SENHA"));
 
@@ -105,7 +113,6 @@ public class PacienteDao {
             }
         } catch (SQLException e) {
             System.err.println("Algo deu errado");
-            DatabaseConnection.closeConnection();
             e.printStackTrace();
         }
 
@@ -113,24 +120,47 @@ public class PacienteDao {
     }
 
     public Paciente selectById(int id) {
-        String sqlStatement = "SELECT * FROM paciente WHERE ID = ?";
+        String sqlStatement = "SELECT * FROM paciente WHERE ID_Paciente = ?";
         Paciente paciente = new Paciente();
 
-        try {
+        try (Connection conn = dataSource.getConnection()){
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                paciente.setId(resultSet.getInt("ID"));
-                paciente.setNmPaciente(resultSet.getString("NM_PACIENTE"));
-                paciente.setDtNasc(resultSet.getDate("DT_NASC"));
+                paciente.setId(resultSet.getInt("ID_Paciente"));
+                paciente.setNmPaciente(resultSet.getString("Nome"));
+                paciente.setDtNasc(resultSet.getDate("Data_Nascimento"));
                 paciente.setEmail(resultSet.getString("EMAIL"));
                 paciente.setSenha(resultSet.getString("SENHA"));
             }
         } catch (SQLException e) {
             System.err.println("Algo deu errado");
-            DatabaseConnection.closeConnection();
+            e.printStackTrace();
+        }
+
+        return paciente;
+    }
+    
+    public Paciente selectByEmail(String email) {
+        String sqlStatement = "SELECT * FROM paciente WHERE email = ?";
+        Paciente paciente = new Paciente();
+
+        try (Connection conn = dataSource.getConnection()){
+            PreparedStatement statement = conn.prepareStatement(sqlStatement);
+            statement.setString(1, email);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                paciente.setId(resultSet.getInt("ID_Paciente"));
+                paciente.setNmPaciente(resultSet.getString("Nome"));
+                paciente.setDtNasc(resultSet.getDate("Data_Nascimento"));
+                paciente.setEmail(resultSet.getString("Email"));
+                paciente.setSenha(resultSet.getString("Senha"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Algo deu errado");
             e.printStackTrace();
         }
 
@@ -138,20 +168,19 @@ public class PacienteDao {
     }
 
     public int selectLast() {
-        String sqlStatement = "SELECT * FROM (SELECT * FROM paciente ORDER BY id DESC) WHERE ROWNUM <= 1";
+        String sqlStatement = "SELECT * FROM (SELECT * FROM paciente ORDER BY ID_Paciente DESC) WHERE ROWNUM <= 1";
         int id = 0;
         
-        try {
+        try (Connection conn = dataSource.getConnection()){
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                id = resultSet.getInt("ID");
+                id = resultSet.getInt("ID_Paciente");
             }
             
         } catch (SQLException e) {
             System.err.println("Algo deu errado");
-            DatabaseConnection.closeConnection();
             e.printStackTrace();
         }
         return id;

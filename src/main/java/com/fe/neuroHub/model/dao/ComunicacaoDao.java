@@ -7,15 +7,26 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.fe.neuroHub.model.vo.Comunicacao;
 
+@Component
 public class ComunicacaoDao {
-    private Connection conn = DatabaseConnection.getConnection();
+    private final DataSource dataSource;
+    
+    @Autowired
+    public ComunicacaoDao(DataSource dataSource) {
+    	this.dataSource = dataSource;
+    }
 
     public String insert(Comunicacao comunicacao) {
         String sqlStatement = "INSERT INTO comunicacao (dtEnvio, mensagem, remetente, idPaciente, idMedico) VALUES (?, ?, ?, ?, ?)";
 
-        try {
+        try(Connection conn = dataSource.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             statement.setDate(1, comunicacao.getDtEnvio());
             statement.setString(2, comunicacao.getMensagem());
@@ -27,7 +38,6 @@ public class ComunicacaoDao {
 
         } catch (SQLException e) {
             System.err.println("Algo deu errado ao inserir a comunicação");
-            DatabaseConnection.closeConnection();
             e.printStackTrace();
             return "Insert falhou";
         }
@@ -38,7 +48,7 @@ public class ComunicacaoDao {
     public String delete(int id) {
         String sqlStatement = "DELETE FROM comunicacao WHERE id = ?";
 
-        try {
+        try(Connection conn = dataSource.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             statement.setInt(1, id);
 
@@ -46,7 +56,6 @@ public class ComunicacaoDao {
 
         } catch (SQLException e) {
             System.err.println("Algo deu errado ao deletar a comunicação");
-            DatabaseConnection.closeConnection();
             e.printStackTrace();
             return "Delete falhou";
         }
@@ -58,7 +67,7 @@ public class ComunicacaoDao {
         List<Comunicacao> comunicacoes = new ArrayList<>();
         String sqlStatement = "SELECT * FROM comunicacao";
 
-        try {
+        try(Connection conn = dataSource.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             ResultSet resultSet = statement.executeQuery();
 
@@ -76,7 +85,6 @@ public class ComunicacaoDao {
 
         } catch (SQLException e) {
             System.err.println("Algo deu errado ao selecionar todas as comunicações");
-            DatabaseConnection.closeConnection();
             e.printStackTrace();
         }
 
@@ -87,7 +95,7 @@ public class ComunicacaoDao {
         String sqlStatement = "SELECT * FROM comunicacao WHERE id = ?";
         Comunicacao comunicacao = new Comunicacao();
 
-        try {
+        try (Connection conn = dataSource.getConnection()){
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -103,7 +111,6 @@ public class ComunicacaoDao {
 
         } catch (SQLException e) {
             System.err.println("Algo deu errado ao selecionar a comunicação por ID");
-            DatabaseConnection.closeConnection();
             e.printStackTrace();
         }
 
@@ -114,7 +121,7 @@ public class ComunicacaoDao {
         String sqlStatement = "SELECT * FROM (SELECT * FROM comunicacao ORDER BY id DESC) WHERE ROWNUM <= 1";
         int id = 0;
         
-        try {
+        try(Connection conn = dataSource.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             ResultSet resultSet = statement.executeQuery();
 
@@ -124,7 +131,6 @@ public class ComunicacaoDao {
 
         } catch (SQLException e) {
             System.err.println("Algo deu errado ao selecionar a comunicação por ID");
-            DatabaseConnection.closeConnection();
             e.printStackTrace();
         }
 

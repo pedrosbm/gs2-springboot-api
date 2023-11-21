@@ -1,5 +1,6 @@
 package com.fe.neuroHub.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +15,12 @@ import com.fe.neuroHub.model.vo.Exame;
 @RestController
 @RequestMapping(value = "/Exame")
 public class ExameController {
-	private ExameDao eDao = new ExameDao();
+	private ExameDao eDao;
+	
+	@Autowired
+	public ExameController(ExameDao eDao) {
+		this.eDao = eDao;
+	}
 	
 	@PostMapping(path = "/New")
 	public ResponseEntity<Exame> newExame(@RequestBody Exame exame ){

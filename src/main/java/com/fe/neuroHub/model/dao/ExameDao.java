@@ -7,15 +7,26 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.fe.neuroHub.model.vo.Exame;
 
+@Component
 public class ExameDao {
-    private Connection conn = DatabaseConnection.getConnection();
+    private final DataSource dataSource;
+    
+    @Autowired
+    public ExameDao(DataSource dataSource) {
+    	this.dataSource = dataSource;
+    }
 
     public String insert(Exame exame) {
         String sqlStatement = "INSERT INTO exame (tipoExame, resultado, idPaciente) VALUES (?, ?, ?)";
 
-        try {
+        try (Connection conn = dataSource.getConnection()){
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             statement.setString(1, exame.getTipoExame());
             statement.setString(2, exame.getResultado());
@@ -24,7 +35,6 @@ public class ExameDao {
 
         } catch (SQLException e) {
             System.err.println("Algo deu errado ao inserir o exame");
-            DatabaseConnection.closeConnection();
             e.printStackTrace();
             return "Erro ao inserir o exame";
         }
@@ -35,14 +45,13 @@ public class ExameDao {
     public String delete(int id) {
         String sqlStatement = "DELETE FROM exame WHERE id = ?";
 
-        try {
+        try (Connection conn = dataSource.getConnection()){
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             statement.setInt(1, id);
             statement.execute();
 
         } catch (SQLException e) {
             System.err.println("Algo deu errado ao excluir o exame");
-            DatabaseConnection.closeConnection();
             e.printStackTrace();
             return "Erro ao excluir o exame";
         }
@@ -54,7 +63,7 @@ public class ExameDao {
         String sqlStatement = "SELECT * FROM (SELECT * FROM exame ORDER BY id DESC) WHERE ROWNUM <= 1";
         int id = 0;
         
-        try {
+        try (Connection conn = dataSource.getConnection()){
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             ResultSet resultSet = statement.executeQuery();
 
@@ -64,7 +73,6 @@ public class ExameDao {
 
         } catch (SQLException e) {
             System.err.println("Algo deu errado ao selecionar o último exame");
-            DatabaseConnection.closeConnection();
             e.printStackTrace();
         }
 
@@ -75,7 +83,7 @@ public class ExameDao {
         String sqlStatement = "SELECT * FROM exame WHERE id = ?";
         Exame exame = new Exame();
 
-        try {
+        try (Connection conn = dataSource.getConnection()){
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -89,7 +97,6 @@ public class ExameDao {
 
         } catch (SQLException e) {
             System.err.println("Algo deu errado ao selecionar o exame por ID");
-            DatabaseConnection.closeConnection();
             e.printStackTrace();
         }
 
@@ -100,7 +107,7 @@ public class ExameDao {
         String sqlStatement = "SELECT * FROM exame";
         List<Exame> exames = new ArrayList<>();
 
-        try {
+        try(Connection conn = dataSource.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             ResultSet resultSet = statement.executeQuery();
 
@@ -116,7 +123,6 @@ public class ExameDao {
 
         } catch (SQLException e) {
             System.err.println("Algo deu errado ao selecionar todos os exames");
-            DatabaseConnection.closeConnection();
             e.printStackTrace();
         }
 
