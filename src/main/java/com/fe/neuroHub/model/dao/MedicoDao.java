@@ -23,15 +23,16 @@ public class MedicoDao {
     }
     
     public String insert(Medico medico) {
-        String sqlStatement = "INSERT INTO medico(?, ?, ?, ?, ?)";
+        String sqlStatement = "INSERT INTO medico values(?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = dataSource.getConnection()){
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             statement.setInt(1, medico.getId());
             statement.setString(2, medico.getNmMedico());
             statement.setString(3, medico.getEspecialidade());
-            statement.setString(4, medico.getEmail());
-            statement.setString(5, medico.getSenha());
+            statement.setDate(4, medico.getDtNasc());
+            statement.setString(5, medico.getEmail());
+            statement.setString(6	, medico.getSenha());
 
             statement.execute();
         } catch (SQLException e) {
@@ -120,6 +121,7 @@ public class MedicoDao {
                 medico.setId(resultSet.getInt("ID_Medico"));
                 medico.setNmMedico(resultSet.getString("Nome_Medico"));
                 medico.setEspecialidade(resultSet.getString("ESPECIALIDADE"));
+                medico.setDtNasc(resultSet.getDate("Data_Nascimento"));
                 medico.setEmail(resultSet.getString("EMAIL"));
                 medico.setSenha(resultSet.getString("senha"));
             }

@@ -1,5 +1,7 @@
 package com.fe.neuroHub.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,5 +37,12 @@ public class MedicoController {
 		Medico doctor = mDao.selectById(id);
 		
 		return ResponseEntity.ok(doctor);
+	}
+	
+	@GetMapping(path = "/Get")
+	public ResponseEntity<List<Medico>> getDoctors(){
+		List<Medico> lista = mDao.selectAll();
+		
+		return ResponseEntity.ok(lista);
 	}
 }

@@ -24,13 +24,14 @@ public class ExameDao {
     }
 
     public String insert(Exame exame) {
-        String sqlStatement = "INSERT INTO exame (tipoExame, resultado, idPaciente) VALUES (?, ?, ?)";
+        String sqlStatement = "INSERT INTO exame VALUES (?, ?, ?, ?)";
 
         try (Connection conn = dataSource.getConnection()){
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
-            statement.setString(1, exame.getTipoExame());
-            statement.setString(2, exame.getResultado());
-            statement.setInt(3, exame.getIdPaciente());
+            statement.setInt(1, exame.getId());
+            statement.setFloat(2, exame.getAcuracia());
+            statement.setString(3, exame.getResultado());
+            statement.setInt(4, exame.getIdPaciente());
             statement.execute();
 
         } catch (SQLException e) {
@@ -43,7 +44,7 @@ public class ExameDao {
     }
 
     public String delete(int id) {
-        String sqlStatement = "DELETE FROM exame WHERE id = ?";
+        String sqlStatement = "DELETE FROM exame WHERE ID_Exame = ?";
 
         try (Connection conn = dataSource.getConnection()){
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
@@ -60,7 +61,7 @@ public class ExameDao {
     }
 
     public int selectLast() {
-        String sqlStatement = "SELECT * FROM (SELECT * FROM exame ORDER BY id DESC) WHERE ROWNUM <= 1";
+        String sqlStatement = "SELECT * FROM (SELECT * FROM exame ORDER BY ID_Exame DESC) WHERE ROWNUM <= 1";
         int id = 0;
         
         try (Connection conn = dataSource.getConnection()){
@@ -68,7 +69,7 @@ public class ExameDao {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                id = resultSet.getInt("ID");
+                id = resultSet.getInt("ID_Exame");
             }
 
         } catch (SQLException e) {
@@ -80,7 +81,7 @@ public class ExameDao {
     }
     
     public Exame selectById(int id) {
-        String sqlStatement = "SELECT * FROM exame WHERE id = ?";
+        String sqlStatement = "SELECT * FROM exame WHERE ID_Exame = ?";
         Exame exame = new Exame();
 
         try (Connection conn = dataSource.getConnection()){
@@ -89,10 +90,10 @@ public class ExameDao {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                exame.setId(resultSet.getInt("ID"));
-                exame.setTipoExame(resultSet.getString("TIPOEXAME"));
+                exame.setId(resultSet.getInt("ID_Exame"));
+                exame.setAcuracia(resultSet.getFloat("acuracia"));
                 exame.setResultado(resultSet.getString("RESULTADO"));
-                exame.setIdPaciente(resultSet.getInt("IDPACIENTE"));
+                exame.setIdPaciente(resultSet.getInt("ID_PACIENTE"));
             }
 
         } catch (SQLException e) {
@@ -113,10 +114,10 @@ public class ExameDao {
 
             while (resultSet.next()) {
                 Exame exame = new Exame();
-                exame.setId(resultSet.getInt("ID"));
-                exame.setTipoExame(resultSet.getString("TIPOEXAME"));
+                exame.setId(resultSet.getInt("ID_Exame"));
+                exame.setAcuracia(resultSet.getFloat("acuracia"));
                 exame.setResultado(resultSet.getString("RESULTADO"));
-                exame.setIdPaciente(resultSet.getInt("IDPACIENTE"));
+                exame.setIdPaciente(resultSet.getInt("ID_PACIENTE"));
 
                 exames.add(exame);
             }

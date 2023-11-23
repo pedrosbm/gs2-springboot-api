@@ -11,8 +11,8 @@ public class Exame {
 	@JsonProperty("id")
 	private int id;
 	
-	@JsonProperty("tipoExame")
-	private String tipoExame;
+	@JsonProperty("acuracia")
+	private float acuracia;
 	
 	@JsonProperty("resultado")
 	private String resultado;
@@ -21,19 +21,19 @@ public class Exame {
 	private int idPaciente;
 	
 	@JsonCreator
-	public Exame(@JsonProperty("tipoExame") String tipoExame,@JsonProperty("resultado") String resultado,@JsonProperty("idPaciente") int idPaciente) {
-		this.tipoExame = tipoExame;
-		this.resultado = resultado;
-		this.idPaciente = idPaciente;
-	}
-
-	public Exame(int id, String tipoExame, String resultado, int idPaciente) {
-		this.id = id;
-		this.tipoExame = tipoExame;
+	public Exame(@JsonProperty("acuracia") float acuracia,@JsonProperty("resultado") String resultado,@JsonProperty("idPaciente") int idPaciente) {
+		this.acuracia = acuracia;
 		this.resultado = resultado;
 		this.idPaciente = idPaciente;
 	}
 	
+	public Exame(int id, float acuracia, String resultado, int idPaciente) {
+		this.id = id;
+		this.acuracia = acuracia;
+		this.resultado = resultado;
+		this.idPaciente = idPaciente;
+	}
+
 	public Exame() {
 		
 	}
@@ -44,11 +44,11 @@ public class Exame {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getTipoExame() {
-		return tipoExame;
+	public float getAcuracia() {
+		return acuracia;
 	}
-	public void setTipoExame(String tipoExame) {
-		this.tipoExame = tipoExame;
+	public void setAcuracia(float acuracia) {
+		this.acuracia = acuracia;
 	}
 	public String getResultado() {
 		return resultado;

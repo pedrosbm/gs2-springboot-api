@@ -1,5 +1,7 @@
 package com.fe.neuroHub.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +26,7 @@ public class ExameController {
 	
 	@PostMapping(path = "/New")
 	public ResponseEntity<Exame> newExame(@RequestBody Exame exame ){
+		exame.setId(eDao.selectLast()+1);
 		eDao.insert(exame);
 		
 		return ResponseEntity.ok(exame);
@@ -34,5 +37,12 @@ public class ExameController {
 		Exame e = eDao.selectById(id);
 		
 		return ResponseEntity.ok(e);
+	}
+	
+	@GetMapping(path = "/List")
+	public ResponseEntity<List<Exame>> getExams(){
+		List<Exame> list = eDao.selectAll();
+		
+		return ResponseEntity.ok(list);
 	}
 }

@@ -1,5 +1,7 @@
 package com.fe.neuroHub.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,5 +36,12 @@ public class ComunicacaoController {
 		Comunicacao c = cDao.selectById(id);
 		
 		return ResponseEntity.ok(c);
+	}
+	
+	@GetMapping(path = "/List/{idPaciente}/{idMedico}")
+	public ResponseEntity<List<Comunicacao>> getComunicacoes(@PathVariable("idPaciente") int idPaciente, @PathVariable("idMedico") int idMedico){
+		List<Comunicacao> lista = cDao.selectConversation(idPaciente, idMedico);
+		
+		return ResponseEntity.ok(lista);
 	}
 }

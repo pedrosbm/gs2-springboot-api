@@ -117,6 +117,37 @@ public class ComunicacaoDao {
         return comunicacao;
     }
     
+    public List<Comunicacao> selectConversation(int idPaciente, int idMedico) {
+        String sqlStatement = "SELECT * FROM comunicacao WHERE id_paciente = ? and id_medico = ? order by data_envio";
+        List<Comunicacao> lista = new ArrayList<Comunicacao>();
+        
+        try (Connection conn = dataSource.getConnection()){
+            PreparedStatement statement = conn.prepareStatement(sqlStatement);
+            statement.setInt(1, idPaciente);
+            statement.setInt(2, idMedico);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+            	Comunicacao comunicacao = new Comunicacao();
+            	
+                comunicacao.setId(resultSet.getInt("ID"));
+                comunicacao.setDtEnvio(resultSet.getDate("DTENVIO"));
+                comunicacao.setMensagem(resultSet.getString("MENSAGEM"));
+                comunicacao.setRemetente(resultSet.getString("REMETENTE"));
+                comunicacao.setIdPaciente(resultSet.getInt("IDPACIENTE"));
+                comunicacao.setIdMedico(resultSet.getInt("IDMEDICO"));
+                
+                lista.add(comunicacao);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Algo deu errado ao selecionar a comunicação por ID");
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+    
     public int selectLast() {
         String sqlStatement = "SELECT * FROM (SELECT * FROM comunicacao ORDER BY id DESC) WHERE ROWNUM <= 1";
         int id = 0;
