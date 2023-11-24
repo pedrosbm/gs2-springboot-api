@@ -124,7 +124,7 @@ public class ComunicacaoDao {
             statement.setInt(1, idPaciente);
             ResultSet resultSet = statement.executeQuery();
 
-            if (resultSet.next()) {
+            while (resultSet.next()) {
             	Comunicacao comunicacao = new Comunicacao();
             	
                 comunicacao.setId(resultSet.getInt("ID_Comunicacao"));
@@ -132,7 +132,7 @@ public class ComunicacaoDao {
                 comunicacao.setMensagem(resultSet.getString("MENSAGEM"));
                 comunicacao.setIdPaciente(resultSet.getInt("ID_Paciente"));
                 comunicacao.setIdMedico(resultSet.getInt("ID_Medico"));
-                
+
                 lista.add(comunicacao);
             }
 

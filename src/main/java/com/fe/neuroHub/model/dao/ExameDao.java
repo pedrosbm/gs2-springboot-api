@@ -105,7 +105,7 @@ public class ExameDao {
     }
 
     public List<Exame> selectAll() {
-        String sqlStatement = "SELECT * FROM exame";
+        String sqlStatement = "SELECT * FROM exame order by id_exame";
         List<Exame> exames = new ArrayList<>();
 
         try(Connection conn = dataSource.getConnection()) {
