@@ -24,17 +24,17 @@ public class ComunicacaoDao {
     }
 
     public String insert(Comunicacao comunicacao) {
-        String sqlStatement = "INSERT INTO comunicacao (dtEnvio, mensagem, remetente, idPaciente, idMedico) VALUES (?, ?, ?, ?, ?)";
+        String sqlStatement = "INSERT INTO comunicacao VALUES (?, ?, ?, ?, ?)";
 
         try(Connection conn = dataSource.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
-            statement.setDate(1, comunicacao.getDtEnvio());
+            statement.setInt(1, comunicacao.getId());
             statement.setString(2, comunicacao.getMensagem());
-            statement.setString(3, comunicacao.getRemetente());
+            statement.setDate(3, comunicacao.getDtEnvio());
             statement.setInt(4, comunicacao.getIdPaciente());
             statement.setInt(5, comunicacao.getIdMedico());
 
-            statement.executeUpdate();
+            statement.execute();
 
         } catch (SQLException e) {
             System.err.println("Algo deu errado ao inserir a comunicação");
@@ -46,13 +46,13 @@ public class ComunicacaoDao {
     }
 
     public String delete(int id) {
-        String sqlStatement = "DELETE FROM comunicacao WHERE id = ?";
+        String sqlStatement = "DELETE FROM comunicacao WHERE ID_Comunicacao = ?";
 
         try(Connection conn = dataSource.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             statement.setInt(1, id);
 
-            statement.executeUpdate();
+            statement.execute();
 
         } catch (SQLException e) {
             System.err.println("Algo deu errado ao deletar a comunicação");
@@ -73,12 +73,11 @@ public class ComunicacaoDao {
 
             while (resultSet.next()) {
                 Comunicacao comunicacao = new Comunicacao();
-                comunicacao.setId(resultSet.getInt("ID"));
-                comunicacao.setDtEnvio(resultSet.getDate("DTENVIO"));
+                comunicacao.setId(resultSet.getInt("ID_Comunicacao"));
+                comunicacao.setDtEnvio(resultSet.getDate("Data_Envio"));
                 comunicacao.setMensagem(resultSet.getString("MENSAGEM"));
-                comunicacao.setRemetente(resultSet.getString("REMETENTE"));
-                comunicacao.setIdPaciente(resultSet.getInt("IDPACIENTE"));
-                comunicacao.setIdMedico(resultSet.getInt("IDMEDICO"));
+                comunicacao.setIdPaciente(resultSet.getInt("ID_Paciente"));
+                comunicacao.setIdMedico(resultSet.getInt("ID_Medico"));
 
                 comunicacoes.add(comunicacao);
             }
@@ -92,7 +91,7 @@ public class ComunicacaoDao {
     }
 
     public Comunicacao selectById(int id) {
-        String sqlStatement = "SELECT * FROM comunicacao WHERE id = ?";
+        String sqlStatement = "SELECT * FROM comunicacao WHERE ID_Comunicacao = ?";
         Comunicacao comunicacao = new Comunicacao();
 
         try (Connection conn = dataSource.getConnection()){
@@ -101,12 +100,11 @@ public class ComunicacaoDao {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                comunicacao.setId(resultSet.getInt("ID"));
-                comunicacao.setDtEnvio(resultSet.getDate("DTENVIO"));
+                comunicacao.setId(resultSet.getInt("ID_Comunicacao"));
+                comunicacao.setDtEnvio(resultSet.getDate("Data_Envio"));
                 comunicacao.setMensagem(resultSet.getString("MENSAGEM"));
-                comunicacao.setRemetente(resultSet.getString("REMETENTE"));
-                comunicacao.setIdPaciente(resultSet.getInt("IDPACIENTE"));
-                comunicacao.setIdMedico(resultSet.getInt("IDMEDICO"));
+                comunicacao.setIdPaciente(resultSet.getInt("ID_Paciente"));
+                comunicacao.setIdMedico(resultSet.getInt("ID_Medico"));
             }
 
         } catch (SQLException e) {
@@ -117,25 +115,23 @@ public class ComunicacaoDao {
         return comunicacao;
     }
     
-    public List<Comunicacao> selectConversation(int idPaciente, int idMedico) {
-        String sqlStatement = "SELECT * FROM comunicacao WHERE id_paciente = ? and id_medico = ? order by data_envio";
+    public List<Comunicacao> selectConversation(int idPaciente) {
+        String sqlStatement = "SELECT * FROM comunicacao WHERE id_paciente = ? order by data_envio";
         List<Comunicacao> lista = new ArrayList<Comunicacao>();
         
         try (Connection conn = dataSource.getConnection()){
             PreparedStatement statement = conn.prepareStatement(sqlStatement);
             statement.setInt(1, idPaciente);
-            statement.setInt(2, idMedico);
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
             	Comunicacao comunicacao = new Comunicacao();
             	
-                comunicacao.setId(resultSet.getInt("ID"));
-                comunicacao.setDtEnvio(resultSet.getDate("DTENVIO"));
+                comunicacao.setId(resultSet.getInt("ID_Comunicacao"));
+                comunicacao.setDtEnvio(resultSet.getDate("Data_Envio"));
                 comunicacao.setMensagem(resultSet.getString("MENSAGEM"));
-                comunicacao.setRemetente(resultSet.getString("REMETENTE"));
-                comunicacao.setIdPaciente(resultSet.getInt("IDPACIENTE"));
-                comunicacao.setIdMedico(resultSet.getInt("IDMEDICO"));
+                comunicacao.setIdPaciente(resultSet.getInt("ID_Paciente"));
+                comunicacao.setIdMedico(resultSet.getInt("ID_Medico"));
                 
                 lista.add(comunicacao);
             }
@@ -149,7 +145,7 @@ public class ComunicacaoDao {
     }
     
     public int selectLast() {
-        String sqlStatement = "SELECT * FROM (SELECT * FROM comunicacao ORDER BY id DESC) WHERE ROWNUM <= 1";
+        String sqlStatement = "SELECT * FROM (SELECT * FROM comunicacao ORDER BY ID_Comunicacao DESC) WHERE ROWNUM <= 1";
         int id = 0;
         
         try(Connection conn = dataSource.getConnection()) {
@@ -157,7 +153,7 @@ public class ComunicacaoDao {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                id = resultSet.getInt("ID");
+                id = resultSet.getInt("ID_Comunicacao");
             }
 
         } catch (SQLException e) {

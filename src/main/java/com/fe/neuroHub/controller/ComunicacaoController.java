@@ -26,6 +26,7 @@ public class ComunicacaoController {
     
 	@PostMapping(path = "/New")
 	public ResponseEntity<Comunicacao> newComunicacao(@RequestBody Comunicacao c ){
+		c.setId(cDao.selectLast() + 1);
 		cDao.insert(c);
 		
 		return ResponseEntity.ok(c);
@@ -38,9 +39,9 @@ public class ComunicacaoController {
 		return ResponseEntity.ok(c);
 	}
 	
-	@GetMapping(path = "/List/{idPaciente}/{idMedico}")
-	public ResponseEntity<List<Comunicacao>> getComunicacoes(@PathVariable("idPaciente") int idPaciente, @PathVariable("idMedico") int idMedico){
-		List<Comunicacao> lista = cDao.selectConversation(idPaciente, idMedico);
+	@GetMapping(path = "/List/{idPaciente}")
+	public ResponseEntity<List<Comunicacao>> getComunicacoes(@PathVariable("idPaciente") int idPaciente){
+		List<Comunicacao> lista = cDao.selectConversation(idPaciente);
 		
 		return ResponseEntity.ok(lista);
 	}

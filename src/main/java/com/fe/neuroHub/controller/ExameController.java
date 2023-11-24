@@ -45,4 +45,11 @@ public class ExameController {
 		
 		return ResponseEntity.ok(list);
 	}
+	
+	@GetMapping(path = "/List/{id}")
+	public ResponseEntity<List<Exame>> getExamsByPatient(@PathVariable("id") int idPaciente ){
+		List<Exame> list = eDao.selectByCliente(idPaciente);
+		
+		return ResponseEntity.ok(list);
+	}
 }

@@ -89,10 +89,4 @@ public class Medico {
 	public void setDtNasc(Date dtNasc) {
 		this.dtNasc = dtNasc;
 	}
-
-	@Override
-	public String toString() {
-		return "Medico [id=" + id + ", nmMedico=" + nmMedico + ", especialidade=" + especialidade + ", email=" + email
-				+ ", senha=" + senha + ", dtNasc=" + dtNasc + "]";
-	}
 }

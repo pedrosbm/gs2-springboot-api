@@ -129,4 +129,31 @@ public class ExameDao {
 
         return exames;
     }
+    
+    public List<Exame> selectByCliente(int idPaciente) {
+        String sqlStatement = "SELECT * FROM exame where ID_Paciente = ? order by ID_Exame";
+        List<Exame> exames = new ArrayList<>();
+
+        try(Connection conn = dataSource.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(sqlStatement);
+            statement.setInt(1, idPaciente);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Exame exame = new Exame();
+                exame.setId(resultSet.getInt("ID_Exame"));
+                exame.setAcuracia(resultSet.getFloat("acuracia"));
+                exame.setResultado(resultSet.getString("RESULTADO"));
+                exame.setIdPaciente(resultSet.getInt("ID_PACIENTE"));
+
+                exames.add(exame);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Algo deu errado ao selecionar todos os exames");
+            e.printStackTrace();
+        }
+
+        return exames;
+    }
 }
